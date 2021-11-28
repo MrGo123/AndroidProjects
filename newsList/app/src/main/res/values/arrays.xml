@@ -2,24 +2,35 @@
 <resources>
     <string-array name="titles">
         <item>A</item>
-        <item>A</item>
-        <item>A</item>
-        <item>A</item>
-        <item>A</item>
-        <item>A</item>
-        <item>A</item>
-        <item>A</item>
-        <item>A</item>
+        <item>AB</item>
+        <item>ABC</item>
+        <item>ABCD</item>
+        <item>ASDSADF</item>
+        <item>ASDAF</item>
+        <item>AFASDFSA</item>
+        <item>AFSADFS</item>
+        <item>AFSADFSDA</item>
     </string-array>
     <string-array name="authors">
-        <item>A</item>
-        <item>A</item>
-        <item>A</item>
-        <item>A</item>
-        <item>A</item>
-        <item>A</item>
-        <item>A</item>
-        <item>A</item>
-        <item>A</item>
+        <item>Aasdfsdafsdafas</item>
+        <item>Afsadfsdafsd</item>
+        <item>Afasdfsad</item>
+        <item>Afasdfsadfssdad</item>
+        <item>Afasdfsdaf</item>
+        <item>Afasdfsdafsda</item>
+        <item>Afasdfasdfa</item>
+        <item>Afasdfsdfsdfdssadfsd</item>
+        <item>Asadfsdfdsfsdfsa</item>
+    </string-array>
+    <string-array name="images">
+        <item>@drawable/img_01</item>
+        <item>@drawable/img_01</item>
+        <item>@drawable/img_01</item>
+        <item>@drawable/img_01</item>
+        <item>@drawable/img_01</item>
+        <item>@drawable/img_01</item>
+        <item>@drawable/img_01</item>
+        <item>@drawable/img_01</item>
+        <item>@drawable/img_01</item>
     </string-array>
 </resources>
