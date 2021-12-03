@@ -1,10 +1,12 @@
 package com.sustart.newslist;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.res.TypedArray;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.widget.ListView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +20,7 @@ public class DetailsActivity extends AppCompatActivity {
     private List<Map<String, String>> dataList = new ArrayList<>();
     public List<News> newsList = new ArrayList<>();
 
-//    从xml文件中读取数据资源
+    //    从xml文件中读取数据资源
     private void initData() {
         int length;
         titles = getResources().getStringArray(R.array.titles);
@@ -44,11 +46,41 @@ public class DetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
 
-        initData();
+//        initData();
+//
+////        使用自定义的适配器
+//        NewsAdapter newsAdapter = new NewsAdapter(DetailsActivity.this, R.layout.list_item, newsList);
+//
+//        ListView lvNewsList = findViewById(R.id.lv_news_list);
+//        lvNewsList.setAdapter(newsAdapter);
 
-//        使用自定义的适配器
+//        实验9 数据持久化部分
+        MySQLiteOpenHelper mySQLiteOpenHelper = new MySQLiteOpenHelper(DetailsActivity.this);
+        SQLiteDatabase db = mySQLiteOpenHelper.getReadableDatabase();
+        Cursor cursor = db.query(NewsContract.NewsEntry.TABLE_NAME, null, null, null, null, null, null);
+
+        List<News> newsList = new ArrayList<>();
+
+        int titleIndex = cursor.getColumnIndex(NewsContract.NewsEntry.COLUMN_NAME_TITLE);
+        int authorIndex = cursor.getColumnIndex(NewsContract.NewsEntry.COLUMN_NAME_AUTHOR);
+        int imageIndex = cursor.getColumnIndex(NewsContract.NewsEntry.COLUMN_NAME_IMAGE);
+
+        while (cursor.moveToNext()) {
+            News news = new News();
+
+            String title = cursor.getString(titleIndex);
+            String author = cursor.getString(authorIndex);
+            String image = cursor.getString(imageIndex);
+
+//            Bitmap bitmap = BitmapFactory.decodeStream(getClass().getResourceAsStream("/" + image));
+
+            news.setmTitle(title);
+            news.setmAuthor(author);
+            news.setmImageId(Integer.parseInt(image));
+            newsList.add(news);
+        }
+
         NewsAdapter newsAdapter = new NewsAdapter(DetailsActivity.this, R.layout.list_item, newsList);
-
         ListView lvNewsList = findViewById(R.id.lv_news_list);
         lvNewsList.setAdapter(newsAdapter);
     }
