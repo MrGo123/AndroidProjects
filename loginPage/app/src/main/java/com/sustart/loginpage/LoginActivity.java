@@ -55,6 +55,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         String accountKey = getResources().getString(R.string.login_account_name);
         String passwordKey = getResources().getString(R.string.login_password);
         String rememberPasswordKey = getResources().getString(R.string.login_remember_password);
+
         SharedPreferences spFile = getSharedPreferences(spFileName, Context.MODE_PRIVATE);
         String account = spFile.getString(accountKey, null);
         String password = spFile.getString(passwordKey, null);
@@ -66,6 +67,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (password != null && !TextUtils.isEmpty(password)) {
             etPwd.setText(password);
         }
+
         cbRememberPwd.setChecked(rememberPassword);
     }
 
