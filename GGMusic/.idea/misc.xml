@@ -4,9 +4,10 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/AndroidStudioProjects/GGMusic/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.28802083333333334" />
+        <entry key="..\:/AndroidStudioProjects/GGMusic/app/src/main/res/drawable/ic_baseline_pause_circle_outline_24.xml" value="0.146875" />
         <entry key="..\:/AndroidStudioProjects/GGMusic/app/src/main/res/drawable/ic_launcher_background.xml" value="0.28802083333333334" />
-        <entry key="..\:/AndroidStudioProjects/GGMusic/app/src/main/res/layout/activity_main.xml" value="0.13247213779128672" />
-        <entry key="..\:/AndroidStudioProjects/GGMusic/app/src/main/res/layout/bottom_media_toolbar.xml" value="0.17980072463768115" />
+        <entry key="..\:/AndroidStudioProjects/GGMusic/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/AndroidStudioProjects/GGMusic/app/src/main/res/layout/bottom_media_toolbar.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/GGMusic/app/src/main/res/layout/list_item.xml" value="0.1" />
       </map>
     </option>

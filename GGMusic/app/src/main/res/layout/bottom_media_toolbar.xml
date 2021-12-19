@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <!--进度-->
     <ProgressBar
         android:id="@+id/progress"
         style="@android:style/Widget.ProgressBar.Horizontal"
@@ -12,20 +13,21 @@
         android:layout_height="1dp"
         android:progress="28"
         android:progressBackgroundTint="@android:color/transparent"
-        app:layout_constraintEnd_toEnd0f="parent"
-        app:layout_constraintStart_tostartOf="@id/tv_bottom_title"
-        app:layout_constraintTop_toTop0f="parent"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/tv_bottom_title"
+        app:layout_constraintTop_toTopOf="parent" />
 
+    <!--    专辑封面-->
     <ImageView
         android:id="@+id/iv_thumbnail"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTop0f="parent"
-        app:layout_constraintstart_toStartOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
+    <!--歌名-->
     <TextView
         android:id="@+id/tv_bottom_title"
         android:layout_width="wrap_content"
@@ -36,10 +38,11 @@
         android:text="Title"
         android:textColor="@color/colorPrimary"
         android:textSize="14sp"
-        app:layout_constraintTop_toTop0Of="parent"
-        app:layout_constraintstart_toEndOf="@id/iv_thumbnail"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/iv_thumbnail"
+        />
 
+    <!--    歌手名-->
     <TextView
         android:id="@+id/tv_bottom_artist"
         android:layout_width="wrap_content"
@@ -50,6 +53,7 @@
         app:layout_constraintStart_toStartOf="@id/tv_bottom_title"
         app:layout_constraintTop_toBottomOf="@id/tv_bottom_title" />
 
+    <!--    音乐播放控制图标-->
     <ImageView
         android:id="@+id/iv_play"
         android:layout_width="32dp"
@@ -60,8 +64,8 @@
         android:clickable="true"
         android:src="@drawable/ic_pause_circle_outline_black_24dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEnd0f="parent"
-        app:layout_constraintTop_toTop0f="parent "/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

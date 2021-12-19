@@ -53,11 +53,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     };
 
     private final int REQUEST_EXTERNAL_STORAGE = 1;
-    private static String[] PERMISSiONS_STORAGE = {
+    private static final String[] PERMISSIONS_STORAGE = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
+    // 3. 设置监听器播放或切换音乐
     private ListView.OnItemClickListener itemClickListener = new ListView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> adapterView,
@@ -109,8 +110,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Glide.with(MainActivity.this).load(albumArt).into(ivAlbumThumbnail);
                     albumCursor.close();
                 }
-
-
             }
         }
     };
@@ -127,6 +126,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mCursorAdapter = new MediaCursorAdapter(MainActivity.this);
         mPlaylist.setAdapter(mCursorAdapter);
 
+
+
         navigation = findViewById(R.id.navigation);
         LayoutInflater.from(MainActivity.this).inflate(R.layout.bottom_media_toolbar, navigation, true);
         ivPlay = navigation.findViewById(R.id.iv_play);
@@ -134,23 +135,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tvBottomArtist = navigation.findViewById(R.id.tv_bottom_artist);
         ivAlbumThumbnail = navigation.findViewById(R.id.iv_thumbnail);
 
-        if (ivPlay != null) {
-            ivPlay.setOnClickListener(MainActivity.this);
-        }
-        navigation.setVisibility(View.GONE);
-
-        // 判断是否已经获得权限，没有获得则进一步判断
+        // 1. 先判断是否已经获得权限，没有获得则进一步判断
         if (ContextCompat.checkSelfPermission(
                 this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(
                     MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
             } else {
-                requestPermissions(PERMISSiONS_STORAGE, REQUEST_EXTERNAL_STORAGE);
+                requestPermissions(PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE);
 //                获得权限后，调用onRequestPermissionsResult()方法
             }
         } else {
             initPlaylist();
         }
+
+//      2. 在 BottomNavigationView中加载bottom_media_toolbar.xml布局
+        if (ivPlay != null) {
+            ivPlay.setOnClickListener(MainActivity.this);
+        }
+        navigation.setVisibility(View.GONE);
+
+
 
     }
 
@@ -180,7 +184,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-
     }
 
     @Override
