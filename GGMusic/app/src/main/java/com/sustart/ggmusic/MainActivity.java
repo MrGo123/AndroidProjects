@@ -8,17 +8,41 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity {
+import com.bumptech.glide.Glide;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.io.IOException;
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+    private static final String TAG = "?";
     private ContentResolver mContentResolver;
     private ListView mPlaylist;
     private MediaCursorAdapter mCursorAdapter;
+
+    private BottomNavigationView navigation;
+    private TextView tvBottomTitle;
+    private TextView tvBottomArtist;
+    private ImageView ivAlbumThumbnail;
+    private ImageView ivPlay;
+
+    private MediaPlayer mMediaPlayer;
+
 
     private final String SELECTION = MediaStore.Audio.Media.IS_MUSIC + " = ? " +
             " AND " + MediaStore.Audio.Media.MIME_TYPE + " LIKE ? ";
@@ -34,6 +58,64 @@ public class MainActivity extends AppCompatActivity {
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
+    private ListView.OnItemClickListener itemClickListener = new ListView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView,
+                                View view, int i, long l) {
+            Cursor cursor = mCursorAdapter.getCursor();
+
+            if (cursor != null && cursor.moveToPosition(i)) {
+                int titleIndex = cursor.getColumnIndex(
+                        MediaStore.Audio.Media.TITLE);
+                int artistIndex = cursor.getColumnIndex(
+                        MediaStore.Audio.Media.ARTIST);
+                int albumIdIndex = cursor.getColumnIndex(
+                        MediaStore.Audio.Media.ALBUM_ID);
+                int dataIndex = cursor.getColumnIndex(
+                        MediaStore.Audio.Media.DATA);
+
+                String title = cursor.getString(titleIndex);
+                String artist = cursor.getString(artistIndex);
+                Long albumId = cursor.getLong(albumIdIndex);
+                String data = cursor.getString(dataIndex);
+
+                Uri dataUri = Uri.parse(data);
+                if (mMediaPlayer != null) {
+                    try {
+                        mMediaPlayer.reset();
+                        mMediaPlayer.setDataSource(MainActivity.this, dataUri);
+                        mMediaPlayer.prepare();
+                        mMediaPlayer.start();
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+
+                navigation.setVisibility(View.VISIBLE);
+
+                if (tvBottomTitle != null) {
+                    tvBottomTitle.setText(title);
+                }
+                if (tvBottomArtist != null) {
+                    tvBottomArtist.setText(title);
+                }
+                Uri albumUri = ContentUris.withAppendedId(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI, albumId);
+                Cursor albumCursor = mContentResolver.query(albumUri, null, null, null, null);
+
+                if (albumCursor != null && albumCursor.getCount() > 0) {
+                    albumCursor.moveToFirst();
+                    int albumArtIndex = albumCursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART);
+                    String albumArt = albumCursor.getString(albumArtIndex);
+                    Glide.with(MainActivity.this).load(albumArt).into(ivAlbumThumbnail);
+                    albumCursor.close();
+                }
+
+
+            }
+        }
+    };
+
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +126,18 @@ public class MainActivity extends AppCompatActivity {
         mContentResolver = getContentResolver();
         mCursorAdapter = new MediaCursorAdapter(MainActivity.this);
         mPlaylist.setAdapter(mCursorAdapter);
+
+        navigation = findViewById(R.id.navigation);
+        LayoutInflater.from(MainActivity.this).inflate(R.layout.bottom_media_toolbar, navigation, true);
+        ivPlay = navigation.findViewById(R.id.iv_play);
+        tvBottomTitle = navigation.findViewById(R.id.tv_bottom_title);
+        tvBottomArtist = navigation.findViewById(R.id.tv_bottom_artist);
+        ivAlbumThumbnail = navigation.findViewById(R.id.iv_thumbnail);
+
+        if (ivPlay != null) {
+            ivPlay.setOnClickListener(MainActivity.this);
+        }
+        navigation.setVisibility(View.GONE);
 
         // 判断是否已经获得权限，没有获得则进一步判断
         if (ContextCompat.checkSelfPermission(
@@ -57,7 +151,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
             initPlaylist();
         }
-
 
     }
 
@@ -84,4 +177,29 @@ public class MainActivity extends AppCompatActivity {
         mCursorAdapter.swapCursor(cursor);
         mCursorAdapter.notifyDataSetChanged();
     }
+
+    @Override
+    public void onClick(View v) {
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (mMediaPlayer == null) {
+            mMediaPlayer = new MediaPlayer();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        if (mMediaPlayer != null) {
+            mMediaPlayer.stop();
+            mMediaPlayer.release();
+            mMediaPlayer = null;
+            Log.d(TAG, "onStop invoked!");
+        }
+        super.onStop();
+    }
+
 }
