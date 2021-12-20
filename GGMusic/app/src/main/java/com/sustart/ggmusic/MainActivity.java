@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.content.ContentResolver;
 import android.content.ContentUris;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.media.MediaPlayer;
@@ -58,6 +59,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
+    public static final String DATA_URI = "com.sustart.ggmusic.DATA_URI";
+    public static final String TITLE = "com.sustart.ggmusic.TITLE";
+    public static final String ARTIST = "com.sustart.ggmusic.ARTIST";
+
     // 3. 设置监听器播放或切换音乐
     private ListView.OnItemClickListener itemClickListener = new ListView.OnItemClickListener() {
         @Override
@@ -80,26 +85,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Long albumId = cursor.getLong(albumIdIndex);
                 String data = cursor.getString(dataIndex);
 
-                Uri dataUri = Uri.parse(data);
-                if (mMediaPlayer != null) {
-                    try {
-                        mMediaPlayer.reset();
-                        mMediaPlayer.setDataSource(MainActivity.this, dataUri);
-                        mMediaPlayer.prepare();
-                        mMediaPlayer.start();
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
+//                Uri dataUri = Uri.parse(data);
+
+//              使用 Service 完成播放
+                Intent serviceIntent = new Intent(MainActivity.this, MusicService.class);
+                serviceIntent.putExtra(MainActivity.DATA_URI, data);
+                serviceIntent.putExtra(MainActivity.TITLE, title);
+                serviceIntent.putExtra(MainActivity.ARTIST, artist);
+//                startForegroundService(serviceIntent);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    startForegroundService(serviceIntent);
                 }
+
+//                if (mMediaPlayer != null) {
+//                    try {
+//                        mMediaPlayer.reset();
+//                        mMediaPlayer.setDataSource(MainActivity.this, dataUri);
+//                        mMediaPlayer.prepare();
+//                        mMediaPlayer.start();
+//                    } catch (IOException ex) {
+//                        ex.printStackTrace();
+//                    }
+//                }
 
                 navigation.setVisibility(View.VISIBLE);
 
+//              更新播放栏信息
                 if (tvBottomTitle != null) {
                     tvBottomTitle.setText(title);
                 }
                 if (tvBottomArtist != null) {
                     tvBottomArtist.setText(title);
                 }
+
                 Uri albumUri = ContentUris.withAppendedId(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI, albumId);
                 Cursor albumCursor = mContentResolver.query(albumUri, null, null, null, null);
 
@@ -120,22 +138,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+// 播放列表资源
         mPlaylist = findViewById(R.id.lv_playlist);
         mContentResolver = getContentResolver();
         mCursorAdapter = new MediaCursorAdapter(MainActivity.this);
         mPlaylist.setAdapter(mCursorAdapter);
+//        播放列表绑定监听器
+        mPlaylist.setOnItemClickListener(itemClickListener);
 
-
-
+// 播放导航栏资源
         navigation = findViewById(R.id.navigation);
         LayoutInflater.from(MainActivity.this).inflate(R.layout.bottom_media_toolbar, navigation, true);
+
         ivPlay = navigation.findViewById(R.id.iv_play);
         tvBottomTitle = navigation.findViewById(R.id.tv_bottom_title);
         tvBottomArtist = navigation.findViewById(R.id.tv_bottom_artist);
         ivAlbumThumbnail = navigation.findViewById(R.id.iv_thumbnail);
 
-        // 1. 先判断是否已经获得权限，没有获得则进一步判断
+//
+        if (ivPlay != null) {
+            ivPlay.setOnClickListener(MainActivity.this);
+        }
+        navigation.setVisibility(View.GONE);
+
+// 权限：判断是否已经获得权限，没有获得则进一步判断
         if (ContextCompat.checkSelfPermission(
                 this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(
@@ -147,15 +173,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else {
             initPlaylist();
         }
-
-//      2. 在 BottomNavigationView中加载bottom_media_toolbar.xml布局
-        if (ivPlay != null) {
-            ivPlay.setOnClickListener(MainActivity.this);
-        }
-        navigation.setVisibility(View.GONE);
-
-
-
     }
 
     @Override
