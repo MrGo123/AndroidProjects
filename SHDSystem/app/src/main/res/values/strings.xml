@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">SHDSystem</string>
+    <string name="textfild_label">label</string>
+    <string name="content_description_media">description</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+</resources>
