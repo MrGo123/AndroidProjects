@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class News {
     @Expose(serialize = false, deserialize = false)
-    private Integer id;
+    private String id;
 
     @SerializedName("title")
     private String Title;
@@ -22,7 +22,7 @@ public class News {
     @SerializedName("ctime")
     private String publishTime;
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -46,7 +46,7 @@ public class News {
         this.publishTime = publishTime;
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 

@@ -1,5 +1,6 @@
 package com.sustart.ggnews;
 
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.NetworkOnMainThreadException;
@@ -28,8 +29,8 @@ public class MainActivity extends AppCompatActivity {
     private ListView lvNewsList;
     private List<News> newsData;
     private NewsAdapter adapter;
-    private int page = 1;
-    private int mCurrentColIndex = 0;
+    private int page = 2;
+    private int mCurrentColIndex = 2;
 
     private int[] mCols = new int[]{Constants.NEWS_COL5,
             Constants.NEWS_COL7, Constants.NEWS_COL8,
@@ -40,8 +41,12 @@ public class MainActivity extends AppCompatActivity {
     private okhttp3.Callback callback = new okhttp3.Callback() {
         @Override
         public void onResponse(@NonNull okhttp3.Call call, @NonNull Response response) throws IOException {
+//            响应成功
             if (response.isSuccessful()) {
-                final String body = response.body().string();
+//                获取响应数据体
+                String body = response.body().string();
+                System.out.println(body);
+//                渲染到ui线程
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -55,14 +60,12 @@ public class MainActivity extends AppCompatActivity {
                         adapter.notifyDataSetChanged();
                     }
                 });
-            } else {
-
-            }
+            } else { }
         }
 
         @Override
-        public void onFailure(@NonNull okhttp3.Call call, @NonNull IOException e) {
-            Log.e(TAG, "Failed to connect server ! ");
+        public void onFailure(@NonNull okhttp3.Call call, @NonNull IOException e){
+            Log.e(TAG, "连接服务器失败! ");
             e.printStackTrace();
         }
 
@@ -82,22 +85,31 @@ public class MainActivity extends AppCompatActivity {
         newsData = new ArrayList<>();
         adapter = new NewsAdapter(MainActivity.this, R.layout.list_item, newsData);
         lvNewsList.setAdapter(adapter);
-        refreshData(1);
+        refreshData(page);
     }
 
+    /**
+     * 通过线程加载数据
+     *
+     * @param page
+     */
     private void refreshData(final int page) {
         new Thread(new Runnable() {
             @Override
             public void run() {
+//                构造请求参数
                 NewsRequest requestObj = new NewsRequest();
                 requestObj.setCol(mCols[mCurrentColIndex]);
                 requestObj.setNum(Constants.NEWS_NUM);
                 requestObj.setPage(page);
                 String urlParams = requestObj.toString();
-                Request request = new Request.Builder()
-                        .url(Constants.GENERAL_NEWS_URL + urlParams).get().build();
+//                创建请求url
+                String requestUrl = Constants.GENERAL_NEWS_URL + urlParams;
+                Log.e(TAG, requestUrl);
+                Request request = new Request.Builder().url(requestUrl).get().build();
+                OkHttpClient client = new OkHttpClient();
                 try {
-                    OkHttpClient client = new OkHttpClient();
+//                    发起请求
                     client.newCall(request).enqueue(callback);
                 } catch (NetworkOnMainThreadException ex) {
                     ex.printStackTrace();
@@ -106,7 +118,9 @@ public class MainActivity extends AppCompatActivity {
         }).start();
     }
 
-
+    /**
+     * 获取列表对象并绑定事件监听器、Intent
+     */
     private void initView() {
         lvNewsList = findViewById(R.id.lv_news_list);
         lvNewsList.setOnItemClickListener(
@@ -117,8 +131,9 @@ public class MainActivity extends AppCompatActivity {
                         Intent intent = new Intent(MainActivity.this,
                                 DetailsActivity.class);
                         News news = adapter.getItem(i);
-                        intent.putExtra(Constants.NEWS_DETAIL_URL_KEY,
-                                news.getContentUrl());
+                        intent.putExtra("title", news.getTitle());
+                        intent.putExtra("ctime", news.getPublishTime());
+                        intent.putExtra("source", news.getSource());
                         startActivity(intent);
                     }
                 });

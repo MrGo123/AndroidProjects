@@ -50,9 +50,10 @@ public class NewsAdapter extends ArrayAdapter<News> {
         }
 
         vh.tvTitle.setText(news.getTitle());
-        vh.tvSource.setText(news.getSource());
+//        vh.tvSource.setText(news.getSource());
         vh.ivDelete.setTag(position);
         vh.tvPublishTime.setText(news.getPublishTime());
+
         Glide.with(mContext).load(news.getPicUrl())
                 .into(vh.ivImage);
 

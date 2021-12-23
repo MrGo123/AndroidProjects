@@ -11,10 +11,10 @@ public class NewsRequest {
     public String toString() {
 
         String retValue;
-        retValue = "?" + "&key=" + Constants.API_KEY + "&num=" + num + "&col=" + col;
+        retValue = "?" + "key=" + Constants.API_KEY + "&num=" + num + "&col=" + col;
         
         if (page != -1) {
-            retValue += "&page" + page;
+            retValue += "&page=" + page;
         }
 
         return retValue;
