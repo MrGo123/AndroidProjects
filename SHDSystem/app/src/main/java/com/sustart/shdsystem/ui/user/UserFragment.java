@@ -7,34 +7,28 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 
+import com.sustart.shdsystem.R;
 import com.sustart.shdsystem.databinding.FragmentUserBinding;
 
 public class UserFragment extends Fragment {
 
-    private UserViewModel userViewModel;
+
     private FragmentUserBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        userViewModel =
-                new ViewModelProvider(this).get(UserViewModel.class);
 
         binding = FragmentUserBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
+        View view = binding.getRoot();
 
-        final TextView textView = binding.textNotifications;
-        userViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
-        return root;
+//  todo 通过接口获取的用户名
+        TextView userName = view.findViewById(R.id.my_user_name);
+        userName.setText("用户名");
+
+
+        return view;
     }
 
     @Override
