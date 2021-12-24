@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/icons"
     tools:context=".LoginActivity">
+<!-- todo UI 优化-->
 
     <!--    应用图标-->
     <ImageView

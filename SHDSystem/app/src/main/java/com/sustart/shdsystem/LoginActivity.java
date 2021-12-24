@@ -1,11 +1,11 @@
 package com.sustart.shdsystem;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -25,6 +25,7 @@ public class LoginActivity extends AppCompatActivity {
 
 //                用户信息判断逻辑
 
+//                进入应用内
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);
             }

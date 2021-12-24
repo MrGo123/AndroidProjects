@@ -8,18 +8,18 @@
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.sustart.shdsystem.ui.home.HomeFragment"
-        android:label="@string/title_home"
+        android:label="主页"
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.sustart.shdsystem.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:id="@+id/navigation_product_manage"
+        android:name="com.sustart.shdsystem.ui.goodsManager.ProductManageFragment"
+        android:label="商品管理"
+        tools:layout="@layout/fragment_product_manage" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.sustart.shdsystem.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:id="@+id/navigation_user_manage"
+        android:name="com.sustart.shdsystem.ui.user.UserFragment"
+        android:label="我的"
+        tools:layout="@layout/fragment_user" />
 </navigation>
