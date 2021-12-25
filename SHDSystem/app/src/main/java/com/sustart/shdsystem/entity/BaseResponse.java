@@ -13,6 +13,15 @@ public class BaseResponse<T> {
     public BaseResponse() {
     }
 
+    @Override
+    public String toString() {
+        return "BaseResponse{" +
+                "code=" + code +
+                ", msg='" + msg + '\'' +
+                ", data=" + data +
+                '}';
+    }
+
     public void setData(T data) {
         this.data = data;
     }

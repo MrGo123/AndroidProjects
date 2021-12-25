@@ -1,11 +1,9 @@
 package com.sustart.shdsystem.ui.home;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,7 +32,7 @@ public class ProductCardRecyclerViewAdapter extends RecyclerView.Adapter<Product
 
     //设置回调接口
     public interface OnItemClickLitener {
-        void onItemClick(View view, int position);
+        void onItemClick(Product product, View view, int position);
     }
 
     public void setOnItemClickLitener(OnItemClickLitener mOnItemClickLitener) {
@@ -50,7 +48,7 @@ public class ProductCardRecyclerViewAdapter extends RecyclerView.Adapter<Product
 
     @Override
     public void onBindViewHolder(@NonNull ProductCardViewHolder holder, final int position) {
-
+//holder.getAdapterPosition();
         if (productList != null && position < productList.size()) {
 //             绑定数据
             Product product = productList.get(position);
@@ -60,12 +58,13 @@ public class ProductCardRecyclerViewAdapter extends RecyclerView.Adapter<Product
             String imageUri = Constant.HOST_URL + Constant.IMAGE_PATH + product.getImageName();
             Glide.with(context).load(product.getImageName())
                     .into(holder.productImage);
-//设置监听事件
+
+//设置item的监听事件，该Item被点击后，将该Item对应的Product传送到HomeFragment中，供详情页使用
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (mOnItemClickLitener != null) {
-                        mOnItemClickLitener.onItemClick(v, position);
+                        mOnItemClickLitener.onItemClick(product, v, position);
                     }
                 }
             });

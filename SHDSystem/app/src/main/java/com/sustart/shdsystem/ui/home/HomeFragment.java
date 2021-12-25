@@ -1,5 +1,7 @@
 package com.sustart.shdsystem.ui.home;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.sustart.shdsystem.R;
 import com.sustart.shdsystem.databinding.FragmentHomeBinding;
 import com.sustart.shdsystem.entity.Product;
+import com.sustart.shdsystem.ui.home.detail.DetailActivity;
 
 public class HomeFragment extends Fragment implements View.OnClickListener {
     private FragmentHomeBinding binding;
@@ -30,11 +33,16 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2, GridLayoutManager.VERTICAL, false));
         ProductCardRecyclerViewAdapter adapter = new ProductCardRecyclerViewAdapter(
                 Product.initProductList(getResources()), getContext());
+
         adapter.setOnItemClickLitener(new ProductCardRecyclerViewAdapter.OnItemClickLitener() {
+            @SuppressLint("ResourceType")
             @Override
-            public void onItemClick(View view, int position) {
-//                点击之后触发详情页
-                System.out.println("打开详情页");
+            public void onItemClick(Product product, View view, int position) {
+//                点击之后触发详情页，这个详情页可能用增加类型的fragment来做更好。不用跳出这个MainActivity。
+                Intent intent = new Intent(getActivity(), DetailActivity.class);
+                intent.putExtra("detailProduct", product);
+                startActivity(intent);
+                System.out.println("打开详情页" + position);
             }
         });
         recyclerView.setAdapter(adapter);

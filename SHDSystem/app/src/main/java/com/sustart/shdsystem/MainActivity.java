@@ -8,7 +8,6 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.sustart.shdsystem.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
@@ -22,7 +21,6 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        BottomNavigationView navView = findViewById(R.id.nav_view);
 
         // 创建导航栏及三个fragment
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
@@ -30,9 +28,7 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
-
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-
         NavigationUI.setupWithNavController(binding.navView, navController);
     }
 

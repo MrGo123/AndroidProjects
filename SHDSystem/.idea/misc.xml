@@ -3,11 +3,14 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/AndroidStudioProjects/SHDSystem/app/src/main/res/layout/activity_detail.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/SHDSystem/app/src/main/res/layout/activity_index.xml" value="0.2056159420289855" />
-        <entry key="..\:/AndroidStudioProjects/SHDSystem/app/src/main/res/layout/activity_login.xml" value="0.264" />
+        <entry key="..\:/AndroidStudioProjects/SHDSystem/app/src/main/res/layout/activity_login.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/SHDSystem/app/src/main/res/layout/activity_main.xml" value="0.1" />
-        <entry key="..\:/AndroidStudioProjects/SHDSystem/app/src/main/res/layout/activity_register.xml" value="0.152" />
+        <entry key="..\:/AndroidStudioProjects/SHDSystem/app/src/main/res/layout/activity_purchase.xml" value="0.264" />
+        <entry key="..\:/AndroidStudioProjects/SHDSystem/app/src/main/res/layout/activity_register.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/SHDSystem/app/src/main/res/layout/fragment_dashboard.xml" value="0.1421875" />
+        <entry key="..\:/AndroidStudioProjects/SHDSystem/app/src/main/res/layout/fragment_detail.xml" value="0.12335359675785208" />
         <entry key="..\:/AndroidStudioProjects/SHDSystem/app/src/main/res/layout/fragment_goods_manage.xml" value="0.1296875" />
         <entry key="..\:/AndroidStudioProjects/SHDSystem/app/src/main/res/layout/fragment_home.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/SHDSystem/app/src/main/res/layout/fragment_notifications.xml" value="0.1421875" />

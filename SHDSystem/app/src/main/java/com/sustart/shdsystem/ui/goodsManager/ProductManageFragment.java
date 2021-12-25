@@ -29,7 +29,7 @@ public class ProductManageFragment extends Fragment {
     private List<Product> productDataList;
     private ProductManageAdapter adapter;
     private View view;
-    private String TAG;
+    private String TAG = "ProductManageFragment.class";
 
     private FragmentProductManageBinding binding;
 
@@ -87,7 +87,7 @@ public class ProductManageFragment extends Fragment {
         productDataList = new ArrayList<>();
         adapter = new ProductManageAdapter(getContext(), R.layout.product_list_item, productDataList);
         productsListView.setAdapter(adapter);
-//        refreshData(1);
+        refreshData(1);
     }
 
     /**
@@ -119,7 +119,7 @@ public class ProductManageFragment extends Fragment {
      * 获取列表对象并绑定事件监听器、Intent
      */
     private void initView() {
-        productsListView = view.findViewById(R.id.lv_product_list);
+        productsListView = view.findViewById(R.id.lv_product_manage_list);
         productsListView.setOnItemClickListener(
                 new AdapterView.OnItemClickListener() {
                     @Override
