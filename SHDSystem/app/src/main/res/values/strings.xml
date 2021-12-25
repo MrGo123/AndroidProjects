@@ -6,6 +6,12 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">管理</string>
     <string name="title_notifications">我的</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!--    login User -->
+    <string name="shared_preference_file_name">shdsystem_login_user</string>
+    <string name="login_user_name">login_account_name</string>
+    <string name="login_user_phone">login_password</string>
+    <string name="login_user_password">login_password</string>
+    <string name="login_user_address">login_password</string>
+    <string name="login_remember_password">login_remember_password</string>
 </resources>

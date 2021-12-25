@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.sustart.shdsystem.R;
+import com.sustart.shdsystem.common.Constant;
 import com.sustart.shdsystem.databinding.FragmentProductManageBinding;
 import com.sustart.shdsystem.entity.Product;
 
@@ -99,10 +100,10 @@ public class ProductManageFragment extends Fragment {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                String urlParams = "url参数列表";
 //                创建请求url
-                String requestUrl = "服务器域名" + urlParams;
-                Log.e(TAG, requestUrl);
+                String requestParam = "接口" + "当前用户的手机号";
+//                发送用户手机号到后台，后台在Product数据库中根据手机号查找该sellerId字段，返回符合的所有Product。安卓端根据需要动态渲染
+                String requestUrl = Constant.HOST_URL;
                 Request request = new Request.Builder().url(requestUrl).get().build();
                 OkHttpClient client = new OkHttpClient();
                 try {
