@@ -54,7 +54,8 @@ public class LoginActivity extends AppCompatActivity {
 
 //                进入应用内
                 if (true) {
-
+//                    保存当前登录用户状态，使得该用户信息全局可用
+                    application.loginUser = new User("123", "testUser", "123abc", "beijing");
 
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
@@ -89,7 +90,7 @@ public class LoginActivity extends AppCompatActivity {
 
 //        存在则保存到Application中
 
-        application.loginUser = new User("123", "libai", "123abc","beijing");
+        application.loginUser = new User("123", "testUser", "123abc", "beijing");
 
 
 //        保存到SharedPreferences中
@@ -111,6 +112,6 @@ public class LoginActivity extends AppCompatActivity {
 //        editor.putBoolean(rememberPasswordKey, true);
 //        editor.apply();
 
-        return false;
+        return true;
     }
 }
