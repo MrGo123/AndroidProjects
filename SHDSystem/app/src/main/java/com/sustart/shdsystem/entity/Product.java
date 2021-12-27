@@ -19,6 +19,9 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 商品信息类
+ */
 public class Product implements Serializable {
     private static final String TAG = Product.class.getSimpleName();
 

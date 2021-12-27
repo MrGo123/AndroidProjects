@@ -14,6 +14,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SHDSystem">
         <activity
+            android:name=".ui.goodsManager.PostProductActivity"
+            android:exported="false"
+            android:parentActivityName=".MainActivity"/>
+        <activity
             android:name=".ui.home.detail.PurchaseActivity"
             android:exported="false"
             android:parentActivityName=".MainActivity" />
@@ -32,6 +36,8 @@
         <activity
             android:name=".LoginActivity"
             android:exported="true">
+
+            <!-- 定义项目启动时的页面 -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

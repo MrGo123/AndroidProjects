@@ -1,5 +1,6 @@
 package com.sustart.shdsystem.ui.goodsManager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.NetworkOnMainThreadException;
 import android.util.Log;
@@ -12,13 +13,14 @@ import android.widget.ListView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.sustart.shdsystem.R;
 import com.sustart.shdsystem.SHDSystemApplication;
 import com.sustart.shdsystem.common.Constant;
 import com.sustart.shdsystem.databinding.FragmentProductManageBinding;
-import com.sustart.shdsystem.entity.BaseResponse;
+import com.sustart.shdsystem.common.BaseResponse;
 import com.sustart.shdsystem.entity.Product;
 
 import java.io.IOException;
@@ -36,7 +38,7 @@ public class ProductManageFragment extends Fragment {
     private ProductManageAdapter adapter;
     private View view;
     private String TAG = "ProductManageFragment.class";
-
+    private FloatingActionButton floatingActionButton;
     private String body;
 
     private SHDSystemApplication application;
@@ -47,14 +49,28 @@ public class ProductManageFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentProductManageBinding.inflate(inflater, container, false);
         view = binding.getRoot();
-// 通过application获取当前登录的的用户信息
+
+        // 通过application获取当前登录的的用户信息
         application = (SHDSystemApplication) getContext().getApplicationContext();
-        System.out.println(application.loginUser.toString());
+
 
         initView();
         initData();
 
         return view;
+    }
+
+    /**
+     * 浮动按钮点击后打开发布商品页PostProductActivity
+     */
+    private void floatingActionButtonSetListener() {
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentToProductActivity = new Intent(getActivity(), PostProductActivity.class);
+                startActivity(intentToProductActivity);
+            }
+        });
     }
 
     @Override
@@ -110,7 +126,7 @@ public class ProductManageFragment extends Fragment {
                     ex.printStackTrace();
                 }
 // 返回的数据不为空，渲染到列表上
-                if(body != null){
+                if (body != null) {
                     Gson gson = new Gson();
                     Type jsonType = new TypeToken<BaseResponse<List<Product>>>() {
                     }.getType();
@@ -128,6 +144,9 @@ public class ProductManageFragment extends Fragment {
      * 获取列表对象并绑定事件监听器、Intent
      */
     private void initView() {
+        floatingActionButton = view.findViewById(R.id.floating_action_button);
+        floatingActionButtonSetListener();
+
         productsListView = view.findViewById(R.id.lv_product_manage_list);
         productsListView.setOnItemClickListener(
                 new AdapterView.OnItemClickListener() {

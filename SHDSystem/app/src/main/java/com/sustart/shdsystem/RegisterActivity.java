@@ -54,7 +54,6 @@ public class RegisterActivity extends AppCompatActivity {
             Log.e(TAG, "连接服务器失败! ");
             e.printStackTrace();
         }
-
     };
 
     @Override
@@ -96,7 +95,6 @@ public class RegisterActivity extends AppCompatActivity {
                 .add("password", user.getPassword())
                 .add("address", user.getAddress())
                 .build();
-
         Request request = new Request.Builder().url(requestUrl).post(requestBody).build();
         OkHttpClient client = new OkHttpClient();
         try {
@@ -105,6 +103,7 @@ public class RegisterActivity extends AppCompatActivity {
             ex.printStackTrace();
             return;
         }
+//        设定一定注册成功
         Toast.makeText(RegisterActivity.this, "注册成功，返回登录", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
         startActivity(intent);

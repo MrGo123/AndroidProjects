@@ -1,7 +1,10 @@
 package com.sustart.shdsystem.entity;
 
+/**
+ * 用户信息类
+ */
 public class User {
-
+    private Integer id;
     private String phone;
     private String name;
     private String password;
