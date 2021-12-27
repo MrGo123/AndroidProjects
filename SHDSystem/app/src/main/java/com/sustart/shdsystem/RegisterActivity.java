@@ -104,7 +104,7 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 //        设定一定注册成功
-        Toast.makeText(RegisterActivity.this, "注册成功，返回登录", Toast.LENGTH_SHORT).show();
+        Toast.makeText(RegisterActivity.this, "注册成功，请登录", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
         startActivity(intent);
     }

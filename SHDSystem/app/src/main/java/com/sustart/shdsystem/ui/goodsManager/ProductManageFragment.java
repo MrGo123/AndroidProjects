@@ -20,7 +20,6 @@ import com.sustart.shdsystem.R;
 import com.sustart.shdsystem.SHDSystemApplication;
 import com.sustart.shdsystem.common.Constant;
 import com.sustart.shdsystem.databinding.FragmentProductManageBinding;
-import com.sustart.shdsystem.common.BaseResponse;
 import com.sustart.shdsystem.entity.Product;
 
 import java.io.IOException;
@@ -40,7 +39,6 @@ public class ProductManageFragment extends Fragment {
     private String TAG = "ProductManageFragment.class";
     private FloatingActionButton floatingActionButton;
     private String body;
-
     private SHDSystemApplication application;
 
     private FragmentProductManageBinding binding;
@@ -53,9 +51,9 @@ public class ProductManageFragment extends Fragment {
         // 通过application获取当前登录的的用户信息
         application = (SHDSystemApplication) getContext().getApplicationContext();
 
-
         initView();
         initData();
+
 
         return view;
     }
@@ -82,11 +80,15 @@ public class ProductManageFragment extends Fragment {
     private okhttp3.Callback callback = new okhttp3.Callback() {
         @Override
         public void onResponse(@NonNull okhttp3.Call call, @NonNull Response response) throws IOException {
-//            响应成功
             if (response.isSuccessful()) {
 //                获取响应数据体
                 body = response.body().string();
-                System.out.println(body);
+                Log.e(TAG, "商品管理接口请求到数据：" + body);
+//                解析json
+                Gson gson = new Gson();
+                Type jsonType = new TypeToken<List<Product>>() {
+                }.getType();
+                productDataList = gson.fromJson(body, jsonType);
             }
         }
 
@@ -113,12 +115,11 @@ public class ProductManageFragment extends Fragment {
             @Override
             public void run() {
 //                创建请求url
-                String requestParam = "接口" + application.loginUser.getPhone();
-//                发送用户手机号到后台，后台在Product数据库中根据手机号查找该sellerId字段，返回符合的所有Product。安卓端根据需要动态渲染
+                String requestParam = "product/queryBySellerId/" + application.loginUser.getId();
+//                发送用户id到后台，后台在Product数据库中根据手机号查找该sellerId字段，返回符合的所有Product。安卓端根据需要动态渲染
                 String requestUrl = Constant.HOST_URL + requestParam;
                 Request request = new Request.Builder().url(requestUrl).get().build();
                 OkHttpClient client = new OkHttpClient();
-
                 try {
 //                    发起请求
                     client.newCall(request).enqueue(callback);
@@ -126,16 +127,16 @@ public class ProductManageFragment extends Fragment {
                     ex.printStackTrace();
                 }
 // 返回的数据不为空，渲染到列表上
-                if (body != null) {
-                    Gson gson = new Gson();
-                    Type jsonType = new TypeToken<BaseResponse<List<Product>>>() {
-                    }.getType();
-                    BaseResponse<List<Product>> productListResponse = gson.fromJson(body, jsonType);
-                    for (Product product : productListResponse.getData()) {
-                        adapter.add(product);
-                    }
-                    adapter.notifyDataSetChanged();
-                }
+//                if (body != null) {
+//                    Gson gson = new Gson();
+//                    Type jsonType = new TypeToken<BaseResponse<List<Product>>>() {
+//                    }.getType();
+//                    BaseResponse<List<Product>> productListResponse = gson.fromJson(body, jsonType);
+//                    for (Product product : productListResponse.getData()) {
+//                        adapter.add(product);
+//                    }
+//                    adapter.notifyDataSetChanged();
+//                }
             }
         }).start();
     }

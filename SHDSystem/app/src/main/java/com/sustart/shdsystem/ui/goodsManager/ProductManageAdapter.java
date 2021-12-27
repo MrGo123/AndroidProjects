@@ -29,6 +29,13 @@ public class ProductManageAdapter extends ArrayAdapter<Product> {
         this.resourceId = resourceId;
     }
 
+    /**
+     * 展示视图
+     * @param position
+     * @param convertView
+     * @param parent
+     * @return
+     */
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {

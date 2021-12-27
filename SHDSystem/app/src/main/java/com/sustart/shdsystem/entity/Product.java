@@ -1,23 +1,7 @@
 package com.sustart.shdsystem.entity;
 
-import android.content.res.Resources;
-import android.util.Log;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.sustart.shdsystem.R;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.io.Serializable;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.Timestamp;
 
 /**
  * 商品信息类
@@ -28,60 +12,23 @@ public class Product implements Serializable {
     private Integer id;
     private String name;
     private Integer price;
-    private String imageName;
+    private String imageUrl;
     private String type;
     private String description;
     //    保存时间戳
-    private Long publishTime;
-    private Long dealTime;
+    private Timestamp publishTime;
+    private Timestamp dealTime;
     private String sellerId;
     private String buyerId;
-
-    /**
-     * 从 raw 的 json 文件中加载数据
-     */
-    public static List<Product> initProductList(Resources resources) {
-// todo 这里要把本地请求改为通过okhttp的接口请求
-
-        InputStream inputStream = resources.openRawResource(R.raw.products);
-        Writer writer = new StringWriter();
-        char[] buffer = new char[1024];
-
-
-        try {
-            Reader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
-            int pointer;
-            while ((pointer = reader.read(buffer)) != -1) {
-                writer.write(buffer, 0, pointer);
-            }
-        } catch (IOException exception) {
-            Log.e(TAG, "从json文件中读取数据出错", exception);
-        } finally {
-            try {
-                inputStream.close();
-            } catch (IOException exception) {
-                Log.e(TAG, "关闭json文件字节流出错", exception);
-            }
-        }
-
-        // 从 Json 转为 对象
-        String jsonProductsString = writer.toString();
-        Gson gson = new Gson();
-        Type productListType = new TypeToken<ArrayList<Product>>() {
-        }.getType();
-
-        return gson.fromJson(jsonProductsString, productListType);
-    }
-
 
     public Product() {
     }
 
-    public Product(Integer id, String name, Integer price, String imageName, String type, String description, Long publishTime, Long dealTime, String sellerId, String buyerId) {
+    public Product(Integer id, String name, Integer price, String imageUrl, String type, String description, Timestamp publishTime, Timestamp dealTime, String sellerId, String buyerId) {
         this.id = id;
         this.name = name;
         this.price = price;
-        this.imageName = imageName;
+        this.imageUrl = imageUrl;
         this.type = type;
         this.description = description;
         this.publishTime = publishTime;
@@ -114,12 +61,12 @@ public class Product implements Serializable {
         this.price = price;
     }
 
-    public String getImageName() {
-        return imageName;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setImageName(String imageName) {
-        this.imageName = imageName;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public String getType() {
@@ -138,19 +85,19 @@ public class Product implements Serializable {
         this.description = description;
     }
 
-    public Long getPublishTime() {
+    public Timestamp getPublishTime() {
         return publishTime;
     }
 
-    public void setPublishTime(Long publishTime) {
+    public void setPublishTime(Timestamp publishTime) {
         this.publishTime = publishTime;
     }
 
-    public Long getDealTime() {
+    public Timestamp getDealTime() {
         return dealTime;
     }
 
-    public void setDealTime(Long dealTime) {
+    public void setDealTime(Timestamp dealTime) {
         this.dealTime = dealTime;
     }
 
