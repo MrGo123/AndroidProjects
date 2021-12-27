@@ -9,6 +9,7 @@
         <entry key="..\:/AndroidStudioProjects/SHDSystem/app/src/main/res/layout/activity_login.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/SHDSystem/app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/SHDSystem/app/src/main/res/layout/activity_post_product.xml" value="0.13247213779128672" />
+        <entry key="..\:/AndroidStudioProjects/SHDSystem/app/src/main/res/layout/activity_product_manage_detail.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/SHDSystem/app/src/main/res/layout/activity_purchase.xml" value="0.264" />
         <entry key="..\:/AndroidStudioProjects/SHDSystem/app/src/main/res/layout/activity_register.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/SHDSystem/app/src/main/res/layout/fragment_dashboard.xml" value="0.1421875" />
@@ -17,10 +18,10 @@
         <entry key="..\:/AndroidStudioProjects/SHDSystem/app/src/main/res/layout/fragment_home.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/SHDSystem/app/src/main/res/layout/fragment_notifications.xml" value="0.1421875" />
         <entry key="..\:/AndroidStudioProjects/SHDSystem/app/src/main/res/layout/fragment_product_manage.xml" value="0.16757246376811594" />
-        <entry key="..\:/AndroidStudioProjects/SHDSystem/app/src/main/res/layout/fragment_user.xml" value="0.1296875" />
+        <entry key="..\:/AndroidStudioProjects/SHDSystem/app/src/main/res/layout/fragment_user.xml" value="0.176" />
         <entry key="..\:/AndroidStudioProjects/SHDSystem/app/src/main/res/layout/goods_cart.xml" value="0.176" />
         <entry key="..\:/AndroidStudioProjects/SHDSystem/app/src/main/res/layout/product_card.xml" value="0.17527173913043478" />
-        <entry key="..\:/AndroidStudioProjects/SHDSystem/app/src/main/res/layout/product_list_item.xml" value="0.1716485507246377" />
+        <entry key="..\:/AndroidStudioProjects/SHDSystem/app/src/main/res/layout/product_list_item.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/SHDSystem/app/src/main/res/menu/bottom_nav_menu.xml" value="0.1" />
       </map>
     </option>

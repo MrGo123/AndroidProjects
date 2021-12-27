@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.bumptech.glide.Glide;
 import com.sustart.shdsystem.R;
 import com.sustart.shdsystem.entity.Product;
 
@@ -31,6 +32,7 @@ public class ProductManageAdapter extends ArrayAdapter<Product> {
 
     /**
      * 展示视图
+     *
      * @param position
      * @param convertView
      * @param parent
@@ -46,7 +48,6 @@ public class ProductManageAdapter extends ArrayAdapter<Product> {
         if (convertView == null) {
             view = LayoutInflater.from(getContext()).inflate(resourceId, parent, false);
             vh = new ViewHolder();
-
             vh.productName = view.findViewById(R.id.manage_product_name);
             vh.productPrice = view.findViewById(R.id.manage_product_price);
             vh.productImage = view.findViewById(R.id.manage_product_image);
@@ -58,13 +59,16 @@ public class ProductManageAdapter extends ArrayAdapter<Product> {
             vh = (ViewHolder) view.getTag();
         }
 
-//        vh.productName.setText(product.getTitle());
-//        vh.tvSource.setText(product.getSource());
-//        vh.ivDelete.setTag(position);
-//        vh.tvPublishTime.setText(product.getPublishTime());
-//
-//        Glide.with(mContext).load(product.getPicUrl())
-//                .into(vh.ivImage);
+        vh.productName.setText(product.getName());
+        vh.productPrice.setText(String.valueOf(product.getPrice()));
+        if (product.getDealTime() == null) {
+            vh.productStatus.setText("未卖");
+        } else {
+            vh.productStatus.setText("已买");
+        }
+        vh.productPublishTime.setText(product.getName());
+        String imgUri = "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimgx.xiawu.com%2Fxzimg%2Fi4%2Fi4%2F2473866184%2FTB2VESTXNjxQeBjy1zbXXbqApXa_%21%212473866184.jpg&refer=http%3A%2F%2Fimgx.xiawu.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1642908591&t=38f7523c41df70658a5c2b8b0d8ea6a7";
+        Glide.with(mContext).load(imgUri).into(vh.productImage);
 
         return view;
     }

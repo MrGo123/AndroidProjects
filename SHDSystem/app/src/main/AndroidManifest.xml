@@ -14,9 +14,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SHDSystem">
         <activity
+            android:name=".ui.goodsManager.ProductManageDetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.goodsManager.PostProductActivity"
             android:exported="false"
-            android:parentActivityName=".MainActivity"/>
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".ui.home.detail.PurchaseActivity"
             android:exported="false"
