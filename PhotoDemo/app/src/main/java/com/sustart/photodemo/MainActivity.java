@@ -1,7 +1,12 @@
-package com.sustart.shdsystem.ui.goodsManager;
+package com.sustart.photodemo;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.ContentUris;
 import android.content.Intent;
@@ -12,7 +17,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.view.View;
@@ -20,25 +24,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
-
-import com.sustart.shdsystem.R;
-
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 
-/**
- * 发布新商品
- */
-public class PostProductActivity extends AppCompatActivity {
-
-    private Button selectImageBtn;
-    private Button cameraImageBtn;
+public class MainActivity extends AppCompatActivity {
+    private Button choose_photo;
+    private Button btn_camera;
     private ImageView imageView;
 
     public static final int TAKE_CAMERA = 101;
@@ -48,41 +39,17 @@ public class PostProductActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_post_product);
+        setContentView(R.layout.activity_main);
 
-        selectImageBtn = findViewById(R.id.select_image_button);
-        cameraImageBtn = findViewById(R.id.camera_button);
-        imageView = findViewById(R.id.image_show);
+        choose_photo = (Button) findViewById(R.id.btn_photo);
+        btn_camera = (Button) findViewById(R.id.btn_camera);
+        imageView = (ImageView) findViewById(R.id.image_show);
 
-        cameraImageBtnBind();
-        selectImageBtnBind();
-
-
-    }
-
-    private void selectImageBtnBind() {
-        selectImageBtn.setOnClickListener(new View.OnClickListener() {
+        //通过摄像头拍照
+        btn_camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //动态申请获取访问 读写磁盘的权限
-                if (ContextCompat.checkSelfPermission(PostProductActivity.this,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(PostProductActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 101);
-                } else {
-                    //打开相册
-                    Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                    intent.setType("image/*");
-                    startActivityForResult(intent, PICK_PHOTO); // 打开相册
-                }
-            }
-        });
-    }
-
-    private void cameraImageBtnBind() {
-        cameraImageBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-// 创建File对象，用于存储拍照后的图片
+                // 创建File对象，用于存储拍照后的图片
                 //存放在手机SD卡的应用关联缓存目录下
                 File outputImage = new File(getExternalCacheDir(), "output_image.jpg");
                /* 从Android 6.0系统开始，读写SD卡被列为了危险权限，如果将图片存放在SD卡的任何其他目录，
@@ -103,15 +70,36 @@ public class PostProductActivity extends AppCompatActivity {
                  */
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     //大于等于版本24（7.0）的场合
-                    imageUri = FileProvider.getUriForFile(PostProductActivity.this, "com.feige.pickphoto.fileprovider", outputImage);
+                    imageUri = FileProvider.getUriForFile(MainActivity.this, "com.feige.pickphoto.fileprovider", outputImage);
                 } else {
                     //小于android 版本7.0（24）的场合
                     imageUri = Uri.fromFile(outputImage);
                 }
+
                 //启动相机程序
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                //MediaStore.ACTION_IMAGE_CAPTURE = android.media.action.IMAGE_CAPTURE
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
                 startActivityForResult(intent, TAKE_CAMERA);
+
+            }
+        });
+
+        //从相册选择图片
+        choose_photo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //动态申请获取访问 读写磁盘的权限
+                if (ContextCompat.checkSelfPermission(MainActivity.this,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 101);
+                } else {
+                    //打开相册
+                    Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                    //Intent.ACTION_GET_CONTENT = "android.intent.action.GET_CONTENT"
+                    intent.setType("image/*");
+                    startActivityForResult(intent, PICK_PHOTO); // 打开相册
+                }
             }
         });
     }
@@ -141,6 +129,7 @@ public class PostProductActivity extends AppCompatActivity {
                         handleImageBeforeKitKat(data);
                     }
                 }
+
                 break;
             default:
                 break;
@@ -176,7 +165,6 @@ public class PostProductActivity extends AppCompatActivity {
 
     /**
      * android 4.4以前的处理方式
-     *
      * @param data
      */
     private void handleImageBeforeKitKat(Intent data) {
@@ -185,7 +173,6 @@ public class PostProductActivity extends AppCompatActivity {
         displayImage(imagePath);
     }
 
-    @SuppressLint("Range")
     private String getImagePath(Uri uri, String selection) {
         String path = null;
         // 通过Uri和selection来获取真实的图片路径
@@ -203,39 +190,8 @@ public class PostProductActivity extends AppCompatActivity {
         if (imagePath != null) {
             Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
             imageView.setImageBitmap(bitmap);
-            saveMyBitmap(bitmap);
         } else {
             Toast.makeText(this, "获取图片失败", Toast.LENGTH_SHORT).show();
         }
     }
-
-    //将bitmap转化为png格式
-    public File saveMyBitmap(Bitmap mBitmap) {
-        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
-        File file = null;
-        try {
-            file = File.createTempFile(
-                    generateFileName(),  /* prefix */
-                    ".jpg",         /* suffix */
-                    storageDir      /* directory */
-            );
-
-            FileOutputStream out = new FileOutputStream(file);
-            mBitmap.compress(Bitmap.CompressFormat.JPEG, 20, out);
-            out.flush();
-            out.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return file;
-    }
-
-    private String generateFileName() {
-
-        return "null" + System.currentTimeMillis();
-    }
-
-    //    todo 图片上传部分：上传时就要重命名图片名称，能够保证图片不重复。考虑用：用户名+时间戳 = 文件名称。
-//    todo 再把该文件名称存到该商品的 image_name 中。
-
 }

@@ -1,11 +1,15 @@
 package com.sustart.shdsystem;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.NetworkOnMainThreadException;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -33,10 +37,14 @@ public class LoginActivity extends AppCompatActivity {
     private Button loginButton;
     private TextInputLayout phoneTextInputLayout;
     private TextInputLayout passwordTextInputLayout;
+    private CheckBox cbRememberPwd;
 
     private User legalUser;
     private SHDSystemApplication application;
     private boolean requestStatus = false;
+
+    private EditText phoneEditText;
+    private EditText passwordEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,11 +55,42 @@ public class LoginActivity extends AppCompatActivity {
         passwordTextInputLayout = findViewById(R.id.login_user_password);
         registerButton = findViewById(R.id.register_btn);
         loginButton = findViewById(R.id.login_btn);
+        cbRememberPwd = findViewById(R.id.login_remember_pwd);
+
+        phoneEditText = phoneTextInputLayout.getEditText();
+        passwordEditText = passwordTextInputLayout.getEditText();
+        rememberMe();
+
 
         application = (SHDSystemApplication) getApplication();
 
+
         registerBind();
         loginBind();
+    }
+
+    /**
+     * 如果sp文件中保存有该用户的信息，则直接获取并填入输入框中。
+     */
+    private void rememberMe() {
+        String spFileName = getResources().getString(R.string.shared_preference_file_name);
+        String userPhoneKey = getResources().getString(R.string.login_user_phone);
+        String userPwdKey = getResources().getString(R.string.login_user_password);
+        String rememberPasswordKey = getResources().getString(R.string.login_remember_password);
+// 如果文件中保存有，则获取对应的数据并绑定
+        SharedPreferences spFile = getSharedPreferences(spFileName, Context.MODE_PRIVATE);
+        String recordPhone = spFile.getString(userPhoneKey, null);
+        String recordPwd = spFile.getString(userPwdKey, null);
+        Boolean rememberPassword = spFile.getBoolean(rememberPasswordKey, false);
+// 有就设置，没有不设置
+        if (recordPhone != null && !TextUtils.isEmpty(recordPhone)) {
+            phoneEditText.setText(recordPhone);
+        }
+
+        if (recordPwd != null && !TextUtils.isEmpty(recordPwd)) {
+            passwordEditText.setText(recordPwd);
+        }
+        cbRememberPwd.setChecked(rememberPassword);
     }
 
     /**
@@ -61,13 +100,9 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // 用户填写信息获取
-                EditText phoneEditText = phoneTextInputLayout.getEditText();
+//                获取输入框的内容
                 String tempPhoneNumber = phoneEditText.getText().toString();
-
-                EditText passwordEditText = passwordTextInputLayout.getEditText();
                 String tempPassword = passwordEditText.getText().toString();
-
                 // 输入合法性判断，暂时只判断是否填写
                 if (tempPhoneNumber.length() == 0) {
 //                    显示错误提示
@@ -81,6 +116,27 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
                 if (isLegalUser(tempPhoneNumber, tempPassword)) {
+//                    记住密码
+                    String spFileName = getResources().getString(R.string.shared_preference_file_name);
+                    String phoneKey = getResources().getString(R.string.login_user_phone);
+                    String passwordKey = getResources().getString(R.string.login_user_password);
+                    String rememberPasswordKey = getResources().getString(R.string.login_remember_password);
+
+                    SharedPreferences spFile = getSharedPreferences(spFileName, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = spFile.edit();
+
+                    if (cbRememberPwd.isChecked()) {
+                        editor.putString(phoneKey, application.loginUser.getPhone());
+                        editor.putString(passwordKey, application.loginUser.getPassword());
+                        editor.putBoolean(rememberPasswordKey, true);
+                        editor.apply();
+                    } else {
+                        editor.remove(phoneKey);
+                        editor.remove(passwordKey);
+                        editor.remove(rememberPasswordKey);
+                        editor.apply();
+                    }
+
                     Toast.makeText(LoginActivity.this, "欢迎，" + legalUser.getName(), Toast.LENGTH_SHORT).show();
 //                 进入主页
                     Intent intentToMainActivity = new Intent(LoginActivity.this, MainActivity.class);
@@ -102,7 +158,8 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
-// todo 这里okhttp为异步执行：存在线程冲突的问题，因为使用了共享变量 legalUser 和 requestStatus
+
+    // todo 这里okhttp为异步执行：存在线程冲突的问题，因为使用了共享变量 legalUser 和 requestStatus
     private okhttp3.Callback callback = new okhttp3.Callback() {
 
         @Override

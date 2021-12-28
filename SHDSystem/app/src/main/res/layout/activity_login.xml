@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/icons"
     tools:context=".LoginActivity">
-<!-- todo UI 优化-->
+    <!-- todo UI 优化-->
 
     <!--    应用图标-->
     <ImageView
@@ -21,8 +21,8 @@
 
     <!--账户输入框-->
     <com.google.android.material.textfield.TextInputLayout
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:id="@+id/login_user_phone"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
@@ -40,10 +40,10 @@
 
     <!--    密码输入框-->
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/login_user_password"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/login_user_password"
         android:layout_marginStart="50dp"
         android:layout_marginTop="400dp"
         android:layout_marginEnd="50dp"
@@ -58,6 +58,19 @@
             android:inputType="textPassword"
             android:maxLines="1" />
     </com.google.android.material.textfield.TextInputLayout>
+
+    <CheckBox
+        android:id="@+id/login_remember_pwd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="45dp"
+        android:layout_marginTop="460dp"
+        android:text="记住密码"
+        android:textColor="@color/accent"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <!--    登录按钮-->
     <com.google.android.material.button.MaterialButton
