@@ -6,6 +6,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.sustart.shdsystem.R;
 
+/**
+ * 购买支付页
+ */
 public class PurchaseActivity extends AppCompatActivity {
 
     @Override

@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.sustart.shdsystem.R;
 
 /**
- * 用户发布的商品的管理页
+ * 用户发布的一件商品的管理页，可修改该商品的基本信息
  */
 public class ProductManageDetailActivity extends AppCompatActivity {
 

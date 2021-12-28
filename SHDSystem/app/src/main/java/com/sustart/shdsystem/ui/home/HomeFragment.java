@@ -30,6 +30,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+/**
+ * 主页：展示所有未出售商品
+ */
 public class HomeFragment extends Fragment implements View.OnClickListener {
     private String TAG = "HomeFragment.class";
 

@@ -14,6 +14,9 @@ import com.sustart.shdsystem.R;
 import com.sustart.shdsystem.SHDSystemApplication;
 import com.sustart.shdsystem.databinding.FragmentUserBinding;
 
+/**
+ * “我的”的页面
+ */
 public class UserFragment extends Fragment {
 
 
@@ -26,6 +29,7 @@ public class UserFragment extends Fragment {
         binding = FragmentUserBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
+        // 获取当前登录用户
         application = (SHDSystemApplication) getContext().getApplicationContext();
 
         TextView userName = view.findViewById(R.id.my_user_name);
@@ -35,6 +39,7 @@ public class UserFragment extends Fragment {
         userName.setText(application.loginUser.getName());
         userAddress.setText(application.loginUser.getAddress());
 
+        // 跳转到用户信息修改页
         userName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -43,6 +48,7 @@ public class UserFragment extends Fragment {
             }
         });
 
+        // 跳转到购买记录页
         purchaseRecord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

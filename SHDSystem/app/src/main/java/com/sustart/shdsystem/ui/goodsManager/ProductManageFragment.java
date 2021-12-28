@@ -30,6 +30,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+/**
+ * 该用的发布的商品的管理页
+ */
 public class ProductManageFragment extends Fragment {
     private String TAG = "ProductManageFragment.class";
 

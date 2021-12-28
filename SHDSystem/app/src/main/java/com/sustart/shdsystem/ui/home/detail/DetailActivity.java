@@ -26,6 +26,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+/**
+ * 每件商品的详细展示页
+ */
 public class DetailActivity extends AppCompatActivity {
 
 

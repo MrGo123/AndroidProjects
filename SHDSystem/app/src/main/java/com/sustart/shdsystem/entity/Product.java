@@ -1,7 +1,7 @@
 package com.sustart.shdsystem.entity;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.sql.Date;
 
 /**
  * 商品信息类
@@ -16,15 +16,15 @@ public class Product implements Serializable {
     private String type;
     private String description;
     //    保存时间戳
-    private Timestamp publishTime;
-    private Timestamp dealTime;
+    private Date publishTime;
+    private Date dealTime;
     private String sellerId;
     private String buyerId;
 
     public Product() {
     }
 
-    public Product(Integer id, String name, Integer price, String imageUrl, String type, String description, Timestamp publishTime, Timestamp dealTime, String sellerId, String buyerId) {
+    public Product(Integer id, String name, Integer price, String imageUrl, String type, String description, Date publishTime, Date dealTime, String sellerId, String buyerId) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -85,19 +85,19 @@ public class Product implements Serializable {
         this.description = description;
     }
 
-    public Timestamp getPublishTime() {
+    public Date getPublishTime() {
         return publishTime;
     }
 
-    public void setPublishTime(Timestamp publishTime) {
+    public void setPublishTime(Date publishTime) {
         this.publishTime = publishTime;
     }
 
-    public Timestamp getDealTime() {
+    public Date getDealTime() {
         return dealTime;
     }
 
-    public void setDealTime(Timestamp dealTime) {
+    public void setDealTime(Date dealTime) {
         this.dealTime = dealTime;
     }
 

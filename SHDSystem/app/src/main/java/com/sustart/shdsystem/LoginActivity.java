@@ -61,9 +61,7 @@ public class LoginActivity extends AppCompatActivity {
         passwordEditText = passwordTextInputLayout.getEditText();
         rememberMe();
 
-
         application = (SHDSystemApplication) getApplication();
-
 
         registerBind();
         loginBind();
@@ -236,28 +234,9 @@ public class LoginActivity extends AppCompatActivity {
             return false;
         }
 
-//        合法
-//        保存到Application中
+//        保存当前用户到Application中
         application.loginUser = this.legalUser;
         return true;
 
-//        todo 记住密码功能：保存到SharedPreferences中
-//        User passedUser = new User();
-//        String spFileName = getResources().getString(R.string.shared_preference_file_name);
-//        String loginUserName = getResources().getString(R.string.login_user_name);
-//        String loginUserPhone = getResources().getString(R.string.login_user_phone);
-//        String loginUserPassword = getResources().getString(R.string.login_user_password);
-//        String loginUserAddress = getResources().getString(R.string.login_user_address);
-//        String rememberPasswordKey = getResources().getString(R.string.login_remember_password);
-//
-//        SharedPreferences spFile = getSharedPreferences(spFileName, Context.MODE_PRIVATE);
-//        SharedPreferences.Editor editor = spFile.edit();
-//
-//        editor.putString(loginUserPhone, passedUser.getPhone());
-//        editor.putString(loginUserName, passedUser.getName());
-//        editor.putString(loginUserPassword, passedUser.getPassword());
-//        editor.putString(loginUserAddress, passedUser.getAddress());
-//        editor.putBoolean(rememberPasswordKey, true);
-//        editor.apply();
     }
 }

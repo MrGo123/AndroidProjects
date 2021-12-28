@@ -13,50 +13,155 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.NetworkOnMainThreadException;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
+import com.google.android.material.textfield.TextInputLayout;
 import com.sustart.shdsystem.R;
+import com.sustart.shdsystem.SHDSystemApplication;
+import com.sustart.shdsystem.common.Constant;
+import com.sustart.shdsystem.entity.Product;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.sql.Date;
+
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 /**
  * 发布新商品
  */
 public class PostProductActivity extends AppCompatActivity {
+    private static String TAG = "PostProductActivity.class";
 
     private Button selectImageBtn;
     private Button cameraImageBtn;
+    private Button submitBtn;
     private ImageView imageView;
+    private TextInputLayout postProductNameIL;
+    private TextInputLayout postProductPriceIL;
+    private TextInputLayout postProductDescIL;
+    private TextInputLayout postProductTypeIL;
 
     public static final int TAKE_CAMERA = 101;
     public static final int PICK_PHOTO = 102;
+
     private Uri imageUri;
+
+    private Long currentTimestamp;
+
+    private Product postProduct;
+
+    private String imageFileName;
+    private File imageFile;
+    private SHDSystemApplication application;
+
+    private okhttp3.Callback callback1 = new okhttp3.Callback() {
+        @Override
+        public void onResponse(@NonNull okhttp3.Call call, @NonNull Response response) throws IOException {
+            if (response.isSuccessful()) {
+                String body = response.body().string();
+                Log.e(TAG, "注册服务器返回数据：" + body);
+            }
+        }
+
+        @Override
+        public void onFailure(@NonNull okhttp3.Call call, @NonNull IOException e) {
+            Log.e(TAG, "连接服务器失败! ");
+            e.printStackTrace();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_product);
 
+        application = (SHDSystemApplication) getApplication();
+
         selectImageBtn = findViewById(R.id.select_image_button);
         cameraImageBtn = findViewById(R.id.camera_button);
         imageView = findViewById(R.id.image_show);
+        postProductNameIL = findViewById(R.id.post_product_name);
+        postProductPriceIL = findViewById(R.id.post_product_price);
+        postProductDescIL = findViewById(R.id.post_product_desc);
+        postProductTypeIL = findViewById(R.id.post_product_type);
+        submitBtn = findViewById(R.id.post_submit_button);
 
         cameraImageBtnBind();
         selectImageBtnBind();
+        submitBtnBind();
 
+    }
+
+    private void submitBtnBind() {
+        submitBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText postProductNameEditText = postProductNameIL.getEditText();
+                String productName = postProductNameEditText.getText().toString();
+                EditText postProductPriceEditText = postProductPriceIL.getEditText();
+                String productPrice = postProductPriceEditText.getText().toString();
+                EditText postProductDescEditText = postProductDescIL.getEditText();
+                String productDesc = postProductDescEditText.getText().toString();
+                EditText postProductTypeEditText = postProductTypeIL.getEditText();
+                String productType = postProductTypeEditText.getText().toString();
+
+                postProduct = new Product(
+                        1,
+                        productName,
+                        Integer.valueOf(productPrice),
+                        imageFileName,
+                        productType,
+                        productDesc,
+                        new Date(currentTimestamp),
+                        null,
+                        String.valueOf(application.loginUser.getId()),
+                        null);
+                postByHttp();
+            }
+        });
+    }
+
+    private void postByHttp() {
+        String requestUrl = Constant.HOST_URL + "product";
+//        todo                 .add("publishTime", currentTimestamp + "")
+        RequestBody requestBody = new FormBody.Builder()
+                .add("name", postProduct.getName())
+                .add("price", String.valueOf(postProduct.getPrice()))
+                .add("imageUrl", postProduct.getImageUrl())
+                .add("type", postProduct.getType())
+                .add("description", postProduct.getDescription())
+                .add("sellerId", postProduct.getSellerId())
+                .build();
+        Request request = new Request.Builder().url(requestUrl).post(requestBody).build();
+        OkHttpClient client = new OkHttpClient();
+        try {
+            client.newCall(request).enqueue(callback1);
+        } catch (NetworkOnMainThreadException ex) {
+            ex.printStackTrace();
+            return;
+        }
 
     }
 
@@ -199,27 +304,40 @@ public class PostProductActivity extends AppCompatActivity {
         return path;
     }
 
+    /**
+     * 在UI中展示已上传图片
+     *
+     * @param imagePath
+     */
     private void displayImage(String imagePath) {
         if (imagePath != null) {
             Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
             imageView.setImageBitmap(bitmap);
-            saveMyBitmap(bitmap);
+//            先生成自定义的文件名："static/" + 该发布用户的id + 当前的时间戳
+//            其中 "static/" 为后端地址映射用，直接作为文件名的一部分
+            currentTimestamp = System.currentTimeMillis();
+            imageFileName =  ""+application.loginUser.getId() + currentTimestamp;
+            imageFile = saveMyBitmap(bitmap);
         } else {
             Toast.makeText(this, "获取图片失败", Toast.LENGTH_SHORT).show();
         }
     }
 
-    //将bitmap转化为png格式
+    /**
+     * 将bitmap转化为png格式
+     *
+     * @param mBitmap
+     * @return
+     */
     public File saveMyBitmap(Bitmap mBitmap) {
         File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
         File file = null;
         try {
             file = File.createTempFile(
-                    generateFileName(),  /* prefix */
+                    imageFileName,  /* prefix */
                     ".jpg",         /* suffix */
                     storageDir      /* directory */
             );
-
             FileOutputStream out = new FileOutputStream(file);
             mBitmap.compress(Bitmap.CompressFormat.JPEG, 20, out);
             out.flush();
@@ -229,13 +347,4 @@ public class PostProductActivity extends AppCompatActivity {
         }
         return file;
     }
-
-    private String generateFileName() {
-
-        return "null" + System.currentTimeMillis();
-    }
-
-    //    todo 图片上传部分：上传时就要重命名图片名称，能够保证图片不重复。考虑用：用户名+时间戳 = 文件名称。
-//    todo 再把该文件名称存到该商品的 image_name 中。
-
 }
