@@ -31,6 +31,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import com.google.android.material.textfield.TextInputLayout;
+import com.sustart.shdsystem.MainActivity;
 import com.sustart.shdsystem.R;
 import com.sustart.shdsystem.SHDSystemApplication;
 import com.sustart.shdsystem.common.Constant;
@@ -43,6 +44,8 @@ import java.io.IOException;
 import java.sql.Date;
 
 import okhttp3.FormBody;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -81,13 +84,28 @@ public class PostProductActivity extends AppCompatActivity {
         public void onResponse(@NonNull okhttp3.Call call, @NonNull Response response) throws IOException {
             if (response.isSuccessful()) {
                 String body = response.body().string();
-                Log.e(TAG, "注册服务器返回数据：" + body);
+                Log.e(TAG, "发布成功，发布服务器接口返回数据：" + body);
             }
         }
 
         @Override
         public void onFailure(@NonNull okhttp3.Call call, @NonNull IOException e) {
             Log.e(TAG, "连接服务器失败! ");
+            e.printStackTrace();
+        }
+    };
+    private okhttp3.Callback callback2 = new okhttp3.Callback() {
+        @Override
+        public void onResponse(@NonNull okhttp3.Call call, @NonNull Response response) throws IOException {
+            if (response.isSuccessful()) {
+                String body = response.body().string();
+                Log.e(TAG, "图片上传成功" + body);
+            }
+        }
+
+        @Override
+        public void onFailure(@NonNull okhttp3.Call call, @NonNull IOException e) {
+            Log.e(TAG, "图片上传失败 ");
             e.printStackTrace();
         }
     };
@@ -144,9 +162,10 @@ public class PostProductActivity extends AppCompatActivity {
     }
 
     private void postByHttp() {
-        String requestUrl = Constant.HOST_URL + "product";
+//            上传商品信息
+        String requestUrl1 = Constant.HOST_URL + "product";
 //        todo                 .add("publishTime", currentTimestamp + "")
-        RequestBody requestBody = new FormBody.Builder()
+        RequestBody requestBody1 = new FormBody.Builder()
                 .add("name", postProduct.getName())
                 .add("price", String.valueOf(postProduct.getPrice()))
                 .add("imageUrl", postProduct.getImageUrl())
@@ -154,15 +173,35 @@ public class PostProductActivity extends AppCompatActivity {
                 .add("description", postProduct.getDescription())
                 .add("sellerId", postProduct.getSellerId())
                 .build();
-        Request request = new Request.Builder().url(requestUrl).post(requestBody).build();
+        Request request1 = new Request.Builder().url(requestUrl1).post(requestBody1).build();
+
+//            上传商品图片
+        String requestUrl2 = Constant.HOST_URL + "product/uploadAvatar";
+//        配置文件类型
+        MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
+//        创建数据体
+        MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
+        builder.addFormDataPart("file", imageFileName, RequestBody.create(MEDIA_TYPE_PNG, imageFile));
+        final MultipartBody requestBody = builder.build();
+        //构建请求
+        final Request request2 = new Request.Builder()
+                .url(requestUrl2)//地址
+                .post(requestBody)//添加请求体
+                .build();
+
         OkHttpClient client = new OkHttpClient();
         try {
-            client.newCall(request).enqueue(callback1);
+            client.newCall(request1).enqueue(callback1);
+            client.newCall(request2).enqueue(callback2);
         } catch (NetworkOnMainThreadException ex) {
             ex.printStackTrace();
             return;
         }
 
+//        设定一定发布成功
+        Toast.makeText(PostProductActivity.this, "商品发布成功", Toast.LENGTH_SHORT).show();
+        Intent intentToMainActivity = new Intent(PostProductActivity.this, MainActivity.class);
+        startActivity(intentToMainActivity);
     }
 
     private void selectImageBtnBind() {
@@ -313,11 +352,9 @@ public class PostProductActivity extends AppCompatActivity {
         if (imagePath != null) {
             Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
             imageView.setImageBitmap(bitmap);
-//            先生成自定义的文件名："static/" + 该发布用户的id + 当前的时间戳
-//            其中 "static/" 为后端地址映射用，直接作为文件名的一部分
-            currentTimestamp = System.currentTimeMillis();
-            imageFileName =  ""+application.loginUser.getId() + currentTimestamp;
             imageFile = saveMyBitmap(bitmap);
+            imageFileName = imageFile.getName();
+            System.out.println("生成的文件名" + imageFile.getName());
         } else {
             Toast.makeText(this, "获取图片失败", Toast.LENGTH_SHORT).show();
         }
@@ -332,9 +369,14 @@ public class PostProductActivity extends AppCompatActivity {
     public File saveMyBitmap(Bitmap mBitmap) {
         File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
         File file = null;
+        //     先生成自定义的文件名其中一部分： 该发布用户的id + 当前的时间戳
+        currentTimestamp = System.currentTimeMillis();
+        String tempFileName = "" + application.loginUser.getId() + currentTimestamp;
+        System.out.println("自定义的文件名部分" + tempFileName);
+//        真实的文件名为自定义的部分拼接上一段莫名其妙的数字串
         try {
             file = File.createTempFile(
-                    imageFileName,  /* prefix */
+                    tempFileName,  /* prefix */
                     ".jpg",         /* suffix */
                     storageDir      /* directory */
             );

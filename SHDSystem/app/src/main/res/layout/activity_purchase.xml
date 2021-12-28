@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         android:layout_marginEnd="132dp"
-        android:text="未接入支付接口"
+        android:text="暂未接入支付接口"
         android:textColor="@color/accent"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -51,15 +51,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.textview.MaterialTextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+
+    <!--提交-->
+    <Button
+        android:id="@+id/purchase_paid_btn"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="60dp"
         android:layout_marginTop="650dp"
-        android:layout_marginEnd="84dp"
-        android:text="转完左上角自己返回"
-        android:textColor="@color/primary"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:text="已支付"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

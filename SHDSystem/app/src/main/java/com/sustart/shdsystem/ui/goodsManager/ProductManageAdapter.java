@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
 import com.sustart.shdsystem.R;
+import com.sustart.shdsystem.common.Constant;
 import com.sustart.shdsystem.entity.Product;
 
 import java.util.List;
@@ -67,8 +68,8 @@ public class ProductManageAdapter extends ArrayAdapter<Product> {
             vh.productStatus.setText("已买");
         }
         vh.productPublishTime.setText(product.getName());
-//        todo 更改为商品的图片链接
-        String imgUri = "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimgx.xiawu.com%2Fxzimg%2Fi4%2Fi4%2F2473866184%2FTB2VESTXNjxQeBjy1zbXXbqApXa_%21%212473866184.jpg&refer=http%3A%2F%2Fimgx.xiawu.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1642908591&t=38f7523c41df70658a5c2b8b0d8ea6a7";
+
+        String imgUri = Constant.HOST_URL + "static/" + product.getImageUrl();
         Glide.with(mContext).load(imgUri).into(vh.productImage);
 
         return view;
