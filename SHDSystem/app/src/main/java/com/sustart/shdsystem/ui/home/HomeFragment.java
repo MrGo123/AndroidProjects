@@ -31,10 +31,10 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class HomeFragment extends Fragment implements View.OnClickListener {
-    private FragmentHomeBinding binding;
     private String TAG = "HomeFragment.class";
-    private List<Product> productList;
 
+    private FragmentHomeBinding binding;
+    private RecyclerView recyclerView;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -43,28 +43,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         View view = binding.getRoot();
 
         //  创建可循环视图 RecyclerView
-        RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
+        recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2, GridLayoutManager.VERTICAL, false));
-//      初始化数据
+        //  初始化数据
         getProductListByHttp();
-//        只要数据没加载出来就空转等待
-        while (productList == null) {
-//            Toast.makeText(getContext(), "努力加载中……", Toast.LENGTH_SHORT).show();
-        }
-        ProductCardRecyclerViewAdapter adapter = new ProductCardRecyclerViewAdapter(productList, getContext());
-        adapter.setOnItemClickLitener(new ProductCardRecyclerViewAdapter.OnItemClickLitener() {
-            @SuppressLint("ResourceType")
-            @Override
-            public void onItemClick(Product product, View view, int position) {
-//                点击之后触发详情页，这个详情页可能用增加类型的fragment来做更好。不用跳出这个MainActivity。
-                Intent intent = new Intent(getActivity(), DetailActivity.class);
-                intent.putExtra("detailProduct", product);
-                startActivity(intent);
-                System.out.println("打开详情页" + position);
-            }
-        });
-        recyclerView.setAdapter(adapter);
 
         //  卡片间距
         int largePadding = getResources().getDimensionPixelSize(R.dimen.shr_product_grid_spacing);
@@ -76,25 +59,21 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
 
     /**
-     * 通过线程加载数据
+     * 通过http加载数据
      */
     private void getProductListByHttp() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-//                创建请求url
-                String requestParam = "product/queryAll";
-//                发送用户id到后台，后台在Product数据库中根据手机号查找该sellerId字段，返回符合的所有Product。安卓端根据需要动态渲染
-                String requestUrl = Constant.HOST_URL + requestParam;
-                Request request = new Request.Builder().url(requestUrl).get().build();
-                OkHttpClient client = new OkHttpClient();
-                try {
-                    client.newCall(request).enqueue(callback);
-                } catch (NetworkOnMainThreadException ex) {
-                    ex.printStackTrace();
-                }
-            }
-        }).start();
+
+
+        String requestParam = "product/queryAll";
+//       发送用户id到后台，后台在Product数据库中根据手机号查找该sellerId字段，返回符合的所有Product。安卓端根据需要动态渲染
+        String requestUrl = Constant.HOST_URL + requestParam;
+        Request request = new Request.Builder().url(requestUrl).get().build();
+        OkHttpClient client = new OkHttpClient();
+        try {
+            client.newCall(request).enqueue(callback);
+        } catch (NetworkOnMainThreadException ex) {
+            ex.printStackTrace();
+        }
     }
 
     private okhttp3.Callback callback = new okhttp3.Callback() {
@@ -105,11 +84,30 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 String body = response.body().string();
                 if (body != null) {
                     Log.e(TAG, "商品所有数据接口请求到数据：" + body);
-//                解析json
                     Gson gson = new Gson();
                     Type jsonType = new TypeToken<List<Product>>() {
                     }.getType();
-                    productList = gson.fromJson(body, jsonType);
+                    List<Product> productList = gson.fromJson(body, jsonType);
+
+//                    通过UI子线程进行数据更新
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ProductCardRecyclerViewAdapter adapter = new ProductCardRecyclerViewAdapter(productList, getContext());
+                            adapter.setOnItemClickLitener(new ProductCardRecyclerViewAdapter.OnItemClickLitener() {
+                                @SuppressLint("ResourceType")
+                                @Override
+                                public void onItemClick(Product product, View view, int position) {
+//                点击之后触发详情页，这个详情页可能用增加类型的fragment来做更好。不用跳出这个MainActivity。
+                                    Intent intent = new Intent(getActivity(), DetailActivity.class);
+                                    intent.putExtra("detailProduct", product);
+                                    startActivity(intent);
+                                    System.out.println("打开详情页" + position);
+                                }
+                            });
+                            recyclerView.setAdapter(adapter);
+                        }
+                    });
                 }
             }
         }

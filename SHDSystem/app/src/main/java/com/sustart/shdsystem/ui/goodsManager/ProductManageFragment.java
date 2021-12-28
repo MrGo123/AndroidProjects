@@ -31,13 +31,15 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class ProductManageFragment extends Fragment {
+    private String TAG = "ProductManageFragment.class";
+
     private ListView productsListView;
-    private List<Product> productDataList;
     private ProductManageAdapter adapter;
     private View view;
-    private String TAG = "ProductManageFragment.class";
     private FloatingActionButton floatingActionButton;
+
     private SHDSystemApplication application;
+
 
     private FragmentProductManageBinding binding;
 
@@ -52,19 +54,6 @@ public class ProductManageFragment extends Fragment {
         initView();
         initData();
         return view;
-    }
-
-    /**
-     * 浮动按钮点击后打开发布商品页PostProductActivity
-     */
-    private void floatingActionButtonSetListener() {
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intentToProductActivity = new Intent(getActivity(), PostProductActivity.class);
-                startActivity(intentToProductActivity);
-            }
-        });
     }
 
     @Override
@@ -82,7 +71,14 @@ public class ProductManageFragment extends Fragment {
                 Gson gson = new Gson();
                 Type jsonType = new TypeToken<List<Product>>() {
                 }.getType();
-                productDataList = gson.fromJson(body, jsonType);
+                List<Product> productDataList = gson.fromJson(body, jsonType);
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter = new ProductManageAdapter(getContext(), R.layout.product_list_item, productDataList);
+                        productsListView.setAdapter(adapter);
+                    }
+                });
             }
         }
 
@@ -95,17 +91,7 @@ public class ProductManageFragment extends Fragment {
     };
 
     private void initData() {
-        getUserProductsByHttp();
-        while (productDataList == null) {
-        }
-        adapter = new ProductManageAdapter(getContext(), R.layout.product_list_item, productDataList);
-        productsListView.setAdapter(adapter);
-    }
 
-    /**
-     * 通过线程加载数据
-     */
-    private void getUserProductsByHttp() {
         String requestParam = "product/queryBySellerId/" + application.loginUser.getId();
 //                发送用户id到后台，后台在Product数据库中根据手机号查找该sellerId字段，返回符合的所有Product。安卓端根据需要动态渲染
         String requestUrl = Constant.HOST_URL + requestParam;
@@ -138,4 +124,18 @@ public class ProductManageFragment extends Fragment {
                     }
                 });
     }
+
+    /**
+     * 浮动按钮点击后打开发布商品页PostProductActivity
+     */
+    private void floatingActionButtonSetListener() {
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentToProductActivity = new Intent(getActivity(), PostProductActivity.class);
+                startActivity(intentToProductActivity);
+            }
+        });
+    }
+
 }

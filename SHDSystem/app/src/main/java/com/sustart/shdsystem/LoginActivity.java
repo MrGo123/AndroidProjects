@@ -28,6 +28,7 @@ import okhttp3.Response;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity.class";
+
     private Button registerButton;
     private Button loginButton;
     private TextInputLayout phoneTextInputLayout;
@@ -101,7 +102,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
-
+// todo 这里okhttp为异步执行：存在线程冲突的问题，因为使用了共享变量 legalUser 和 requestStatus
     private okhttp3.Callback callback = new okhttp3.Callback() {
 
         @Override
@@ -161,7 +162,7 @@ public class LoginActivity extends AppCompatActivity {
 
 //        网络请求返回该用户的所有信息
         getUserInfoByHttp(userPhone);
-//        如果当前用户没请求回来，则该线程空转
+//        todo 存在线程问题：如果当前用户没请求回来，则该线程空转
         while (!requestStatus) {
         }
 //        没有返回User说明没有该用户

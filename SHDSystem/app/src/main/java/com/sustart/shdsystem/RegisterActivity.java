@@ -27,22 +27,21 @@ import okhttp3.Response;
 public class RegisterActivity extends AppCompatActivity {
 
     private static final String TAG = "RegisterActivity.class";
-    private Button registerButton;
 
+    private Button registerButton;
     private TextInputLayout phoneTextInputLayout;
     private TextInputLayout nameTextInputLayout;
     private TextInputLayout passwordTextInputLayout;
     private TextInputLayout addressTextInputLayout;
 
     private User user;
-    private boolean registerResult = false;
+
 
     private okhttp3.Callback callback = new okhttp3.Callback() {
         @Override
         public void onResponse(@NonNull okhttp3.Call call, @NonNull Response response) throws IOException {
 //            响应成功
             if (response.isSuccessful()) {
-                registerResult = true;
 //                获取响应数据体
                 String body = response.body().string();
                 Log.e(TAG, "注册服务器返回数据：" + body);
@@ -82,12 +81,12 @@ public class RegisterActivity extends AppCompatActivity {
 //              todo  参数合法性校验。内容不为空且合法才执行注册方法
 
                 user = new User(phone, name, password, address);
-                registerUser(user);
+                registerUser();
             }
         });
     }
 
-    private void registerUser(User user) {
+    private void registerUser() {
         String requestUrl = Constant.HOST_URL + "user";
         RequestBody requestBody = new FormBody.Builder()
                 .add("phone", user.getPhone())

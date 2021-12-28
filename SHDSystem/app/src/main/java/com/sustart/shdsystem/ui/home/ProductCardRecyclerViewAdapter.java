@@ -53,7 +53,7 @@ public class ProductCardRecyclerViewAdapter extends RecyclerView.Adapter<Product
 //             绑定数据
             Product product = productList.get(position);
             holder.productName.setText(product.getName());
-            holder.productPrice.setText(String.valueOf(product.getPrice()));
+            holder.productPrice.setText("￥" + product.getPrice());
 //            网络请求时加载并绑定图片
 //            String imageUri = product.getImageUrl();
             String imageUri = "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimgx.xiawu.com%2Fxzimg%2Fi4%2Fi4%2F2473866184%2FTB2VESTXNjxQeBjy1zbXXbqApXa_%21%212473866184.jpg&refer=http%3A%2F%2Fimgx.xiawu.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1642908591&t=38f7523c41df70658a5c2b8b0d8ea6a7";
