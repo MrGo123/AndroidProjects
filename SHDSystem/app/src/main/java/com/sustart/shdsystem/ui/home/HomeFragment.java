@@ -101,6 +101,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                                 @SuppressLint("ResourceType")
                                 @Override
                                 public void onItemClick(Product product, View view, int position) {
+
 //                点击之后触发详情页，这个详情页可能用增加类型的fragment来做更好。不用跳出这个MainActivity。
                                     Intent intent = new Intent(getActivity(), DetailActivity.class);
                                     intent.putExtra("detailProduct", product);

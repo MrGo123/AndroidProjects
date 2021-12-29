@@ -9,7 +9,7 @@
 
     <!--    login User -->
     <string name="shared_preference_file_name">shdsystem_login_user</string>
-    <string name="login_user_phone">login_password</string>
+    <string name="login_user_phone">login_phone</string>
     <string name="login_user_password">login_password</string>
     <string name="login_remember_password">login_remember_password</string>
 </resources>

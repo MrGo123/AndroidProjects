@@ -41,7 +41,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.sql.Date;
 
 import okhttp3.FormBody;
 import okhttp3.MediaType;
@@ -75,7 +74,6 @@ public class PostProductActivity extends AppCompatActivity {
 
     private Product postProduct;
 
-    private String imageFileName;
     private File imageFile;
     private SHDSystemApplication application;
 
@@ -126,10 +124,13 @@ public class PostProductActivity extends AppCompatActivity {
         postProductTypeIL = findViewById(R.id.post_product_type);
         submitBtn = findViewById(R.id.post_submit_button);
 
+//        开启imageView的缓存，方便上传时重新获取用户选择的图片
+        imageView.setDrawingCacheEnabled(true);
+        imageView = findViewById(R.id.image_show);
+
         cameraImageBtnBind();
         selectImageBtnBind();
         submitBtnBind();
-
     }
 
     private void submitBtnBind() {
@@ -145,18 +146,21 @@ public class PostProductActivity extends AppCompatActivity {
                 EditText postProductTypeEditText = postProductTypeIL.getEditText();
                 String productType = postProductTypeEditText.getText().toString();
 
+                imageFile = saveMyBitmap(imageView.getDrawingCache());
                 postProduct = new Product(
                         1,
                         productName,
                         Integer.valueOf(productPrice),
-                        imageFileName,
+                        imageFile.getName(),
                         productType,
                         productDesc,
-                        new Date(currentTimestamp),
+                        null,
                         null,
                         String.valueOf(application.loginUser.getId()),
                         null);
                 postByHttp();
+                //        关闭imageView的缓存，
+                imageView.setDrawingCacheEnabled(false);
             }
         });
     }
@@ -181,7 +185,7 @@ public class PostProductActivity extends AppCompatActivity {
         MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
 //        创建数据体
         MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
-        builder.addFormDataPart("file", imageFileName, RequestBody.create(MEDIA_TYPE_PNG, imageFile));
+        builder.addFormDataPart("file", postProduct.getImageUrl(), RequestBody.create(MEDIA_TYPE_PNG, imageFile));
         final MultipartBody requestBody = builder.build();
         //构建请求
         final Request request2 = new Request.Builder()
@@ -352,9 +356,6 @@ public class PostProductActivity extends AppCompatActivity {
         if (imagePath != null) {
             Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
             imageView.setImageBitmap(bitmap);
-            imageFile = saveMyBitmap(bitmap);
-            imageFileName = imageFile.getName();
-            System.out.println("生成的文件名" + imageFile.getName());
         } else {
             Toast.makeText(this, "获取图片失败", Toast.LENGTH_SHORT).show();
         }

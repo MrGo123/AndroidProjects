@@ -85,10 +85,11 @@ public class PurchaseActivity extends AppCompatActivity {
     }
 
     private void updateByHttp() {
-//            todo 后端接口
-        String requestUrl = Constant.HOST_URL + "product";
+
+        String requestUrl = Constant.HOST_URL + "product/edit";
 //        todo                 .add("dealTime", currentTimestamp + "")
         RequestBody requestBody = new FormBody.Builder()
+                .add("id", product.getId()+"")
                 .add("name", product.getName())
                 .add("price", String.valueOf(product.getPrice()))
                 .add("imageUrl", product.getImageUrl())

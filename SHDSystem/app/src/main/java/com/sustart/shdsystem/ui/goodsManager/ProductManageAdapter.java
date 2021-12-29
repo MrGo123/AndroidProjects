@@ -24,7 +24,7 @@ public class ProductManageAdapter extends ArrayAdapter<Product> {
     private Context mContext;
     private int resourceId;
 
-    public ProductManageAdapter(Context context, int resourceId, List<Product> data) {
+    public  ProductManageAdapter(Context context, int resourceId, List<Product> data) {
         super(context, resourceId, data);
         this.mContext = context;
         this.productData = data;
@@ -62,7 +62,7 @@ public class ProductManageAdapter extends ArrayAdapter<Product> {
 
         vh.productName.setText(product.getName());
         vh.productPrice.setText("￥" + product.getPrice());
-        if (product.getDealTime() == null) {
+        if (product.getBuyerId() == null) {
             vh.productStatus.setText("未卖");
         } else {
             vh.productStatus.setText("已买");

@@ -53,7 +53,7 @@ public class ProductManageFragment extends Fragment {
 
         // 通过application获取当前登录的的用户信息
         application = (SHDSystemApplication) getContext().getApplicationContext();
-
+        Log.e(TAG, "商品管理页监听到用户：" + application.loginUser.toString());
         initView();
         initData();
         return view;
@@ -71,10 +71,12 @@ public class ProductManageFragment extends Fragment {
             if (response.isSuccessful()) {
                 String body = response.body().string();
                 Log.e(TAG, "用户商品管理接口请求到数据：" + body);
+
                 Gson gson = new Gson();
                 Type jsonType = new TypeToken<List<Product>>() {
                 }.getType();
                 List<Product> productDataList = gson.fromJson(body, jsonType);
+
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -122,7 +124,7 @@ public class ProductManageFragment extends Fragment {
                                             View view, int i, long l) {
                         Intent intent = new Intent(getContext(), ProductManageDetailActivity.class);
                         Product product = adapter.getItem(i);
-                        intent.putExtra("product", product);
+                        intent.putExtra("manageItemProduct", product);
                         startActivity(intent);
                     }
                 });

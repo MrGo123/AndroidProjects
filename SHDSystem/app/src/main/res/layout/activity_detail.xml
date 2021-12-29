@@ -61,13 +61,13 @@
             android:textAppearance="?attr/textAppearanceBody2" />
 
         <!-- 发布时间-->
-        <TextView
-            android:id="@+id/detail_product_publish_time"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="发布时间"
-            android:textAlignment="center"
-            android:textAppearance="?attr/textAppearanceBody2" />
+<!--        <TextView-->
+<!--            android:id="@+id/detail_product_publish_time"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="发布时间"-->
+<!--            android:textAlignment="center"-->
+<!--            android:textAppearance="?attr/textAppearanceBody2" />-->
         <!-- 卖家名称-->
         <TextView
             android:id="@+id/detail_seller_name"

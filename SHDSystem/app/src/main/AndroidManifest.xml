@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.sustart.shdsystem">
-    <!--网络权限-->
+    <!-- 网络权限 -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <!--文件（照片）读写权限-->
+    <!-- 文件（照片）读写权限 -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
@@ -16,6 +16,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SHDSystem">
+        <activity
+            android:name=".ui.user.PurchaseRecordItemActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.user.PurchaseRecordActivity"/>
         <activity
             android:name=".ui.user.PurchaseRecordActivity"
             android:exported="false"
@@ -51,6 +55,7 @@
         <activity
             android:name=".LoginActivity"
             android:exported="true">
+
             <!-- 定义项目启动时的页面 -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

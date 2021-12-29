@@ -236,6 +236,7 @@ public class LoginActivity extends AppCompatActivity {
 
 //        保存当前用户到Application中
         application.loginUser = this.legalUser;
+        Log.e(TAG, "当前登录用户信息："+application.loginUser.toString());
         return true;
 
     }
